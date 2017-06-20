@@ -7,7 +7,7 @@ import java.util.*;
  */
 public class MyArrayList <T> implements List<T> {
 
-    static private int SIZE = 20;
+    static private int SIZE = 10;
 
     private int size = 0;
     private Object[] array;
