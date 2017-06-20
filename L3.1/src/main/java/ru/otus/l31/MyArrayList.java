@@ -7,10 +7,9 @@ import java.util.*;
  */
 public class MyArrayList <T> implements List<T> {
 
-    static private int SIZE = 10;
+    static private int SIZE = 20;
 
     private int size = 0;
-    private int capacity = 0;
     private Object[] array;
 
     public MyArrayList() {
@@ -107,17 +106,8 @@ public class MyArrayList <T> implements List<T> {
 
         @Override
         public E next() {
-            /*if(cursor >= (size - 1)){
-                throw new NoSuchElementException();
-            }
-            last = cursor;
-            System.out.println(cursor + "," + size);
-            return (E) array[++cursor];*/
-
             last = cursor;
             if(cursor < (size - 1)){
-
-//                System.out.println(cursor + "," + size);
                 return (E) array[++cursor];
             }
             return null;
