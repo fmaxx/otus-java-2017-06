@@ -51,9 +51,8 @@ public class MyArrayList <T> implements List<T> {
         ListIterator<T> i = this.listIterator();
         Object[] a = this.toArray();
         Arrays.sort(a, (Comparator) c);
-        for (Object e : a) {
+        for (Object ignored : a) {
             i.next();
-            i.set((T) e);
         }
         array = a;
     }
@@ -142,9 +141,7 @@ public class MyArrayList <T> implements List<T> {
 
         @Override
         public void set(E e) {
-            if(last > -1){
-                MyArrayList.this.set(last, (T) e);
-            }
+
         }
 
         @Override
