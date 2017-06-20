@@ -49,11 +49,13 @@ public class MyArrayList <T> implements List<T> {
     @Override
     public void sort(Comparator<? super T> c) {
         ListIterator<T> i = this.listIterator();
-        Arrays.sort(array, (Comparator) c);
-        for (Object e : array) {
+        Object[] a = this.toArray();
+        Arrays.sort(a, (Comparator) c);
+        for (Object e : a) {
             i.next();
             i.set((T) e);
         }
+        array = a;
     }
 
     @Override
