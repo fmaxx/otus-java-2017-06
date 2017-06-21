@@ -7,21 +7,44 @@ import java.util.*;
  */
 public class MyArrayList <T> implements List<T> {
 
-    static private int SIZE = 10;
+    static private int SIZE = 5;
 
-    private int size = 0;
+    int size;
     private Object[] array;
 
     public MyArrayList() {
-        array = new Object[SIZE];
+        this(SIZE);
+    }
+
+    public MyArrayList(int capacity) {
+        array = new Object[capacity];
+        size = 0;
+    }
+
+    public MyArrayList(Collection<? extends T> c) {
+        array = c.toArray();
+        size = array.length;
     }
 
  // ------------------------------------------------------
+
+    @Override
+    public boolean add(T t) {
+        int available = array.length - size;
+        if(available < 1) {
+            array = Arrays.copyOf(array, size + 1);
+        }
+
+        array[size++] = t;
+
+        return true;
+    }
+
+
     @Override
     public boolean addAll(Collection<? extends T> c) {
         Object[] collectionArray = c.toArray();
         int length = collectionArray.length;
-
         int position = size;
         int available = array.length - size;
 
@@ -34,6 +57,20 @@ public class MyArrayList <T> implements List<T> {
 
         System.arraycopy(collectionArray, 0, array, position, length);
         return length > 0;
+    }
+
+
+
+    @Override
+    public T get(int index) {
+        return (T) array[index];
+    }
+
+    @Override
+    public T set(int index, T element) {
+        T value = (T) array[index];
+        array[index] = element;
+        return value;
     }
 
     static <T> void copy(List<? super T> dest, List<? extends T> src) {
@@ -77,17 +114,17 @@ public class MyArrayList <T> implements List<T> {
 
     @Override
     public Object[] toArray() {
-        return Arrays.copyOf(array, size);
+        return Arrays.copyOf(array, this.size());
     }
 
     @Override
     public int size() {
-        return size;
+        return array.length;
     }
 
     @Override
     public boolean isEmpty() {
-        return size <= 0;
+        return size() <= 0;
     }
 
     private class MyIterator<E> implements ListIterator<E> {
@@ -102,16 +139,18 @@ public class MyArrayList <T> implements List<T> {
 
         @Override
         public boolean hasNext() {
-            return cursor != size;
+            return cursor != size();
         }
 
         @Override
         public E next() {
             last = cursor;
-            if(cursor < (size - 1)){
-                return (E) array[++cursor];
+            E result = null;
+            if(cursor <= (size() - 1)){
+                result = (E) array[cursor++];
             }
-            return null;
+//            System.out.println("cursor : " +cursor + ", result: "+result);
+            return result;
         }
 
         @Override
@@ -141,7 +180,7 @@ public class MyArrayList <T> implements List<T> {
 
         @Override
         public void set(E e) {
-
+            MyArrayList.this.set(last, (T) e);
         }
 
         @Override
@@ -150,14 +189,11 @@ public class MyArrayList <T> implements List<T> {
         }
     }
 
-    @Override
-    public T set(int index, T element) {
-        return null;
-    }
+
 
     @Override
     public String toString() {
-        return Arrays.toString(this.toArray());
+        return Arrays.toString(toArray());
     }
 
     // ------------------------------------------------------
@@ -184,10 +220,7 @@ public class MyArrayList <T> implements List<T> {
         return null;
     }
 
-    @Override
-    public boolean add(T t) {
-        return false;
-    }
+
 
     @Override
     public boolean remove(Object o) {
@@ -218,10 +251,7 @@ public class MyArrayList <T> implements List<T> {
 
     }
 
-    @Override
-    public T get(int index) {
-        return null;
-    }
+
 
 
 
