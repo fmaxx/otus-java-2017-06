@@ -20,8 +20,8 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-//        System.out.println("--- run classes ---");
-//        Runner.run(new Class[]{EducationTests.class});
+        System.out.println("--- run classes ---");
+        Runner.run(new Class[]{EducationTests.class});
 
         System.out.println("--- run package ---");
         Runner.run("ru.otus.l51.tests");
