@@ -16,12 +16,12 @@ public class Main {
         List<Cell> cells = new ArrayList<>();
         cells.add(new Cell(20, 3));
         cells.add(new Cell(50, 1));
-        ATMState workingState = new ATM.DefaultState(cells);
+        ATMState workingState = new ATM.State(cells);
 
         cells = new ArrayList<>();
         cells.add(new Cell(20, 3));
         cells.add(new Cell(50, 1));
-        ATMState defaultStateState = new ATM.DefaultState(cells);
+        ATMState defaultStateState = new ATM.State(cells);
 
         ATM atm_1 = new ATM(workingState, defaultStateState);
 
@@ -33,7 +33,7 @@ public class Main {
         cells.add(new Cell(10, 10));
         cells.add(new Cell(50, 10));
         cells.add(new Cell(100, 10));
-        workingState = new ATM.DefaultState(cells);
+        workingState = new ATM.State(cells);
 
         cells = new ArrayList<>();
         cells.add(new Cell(1, 10));
@@ -41,7 +41,7 @@ public class Main {
         cells.add(new Cell(10, 10));
         cells.add(new Cell(50, 10));
         cells.add(new Cell(100, 10));
-        defaultStateState = new ATM.DefaultState(cells);
+        defaultStateState = new ATM.State(cells);
 
         ATM atm_2 = new ATM(workingState, defaultStateState);
 

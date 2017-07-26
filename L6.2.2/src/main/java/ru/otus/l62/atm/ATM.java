@@ -90,11 +90,11 @@ public class ATM implements Iterable<ATM> {
 
 
 
-    public static class DefaultState implements ATMState {
+    public static class State implements ATMState {
 
         private List<Cell> cells;
 
-        public DefaultState(List<Cell> cells ) {
+        public State(List<Cell> cells ) {
             this.cells = cells;
         }
 
