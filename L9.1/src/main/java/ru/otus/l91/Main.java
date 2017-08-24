@@ -17,7 +17,7 @@ public class Main {
     }
 
     static private void example(){
-        Connection connection = ConnectionHelper.connect();
+        Connection connection = ConnectionHelper.open();
         Executor executor = new Executor(connection);
 
         // SAVE example

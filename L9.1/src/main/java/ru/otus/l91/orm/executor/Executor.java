@@ -1,7 +1,8 @@
 package ru.otus.l91.orm.executor;
 
-import ru.otus.l91.orm.Config;
 import ru.otus.l91.orm.data.DataSet;
+import ru.otus.l91.orm.data.UserDataSet;
+import ru.otus.l91.orm.handlers.TResultHandler;
 import ru.otus.l91.orm.helpers.ReflectionHelper;
 
 import javax.persistence.Column;
@@ -27,7 +28,11 @@ public class Executor {
             return false;
         }
 
-        String tableName = user.getClass().getAnnotation(Table.class).name();
+        String tableName = getTableNameFromAnnotation(user.getClass());
+        if(tableName == null){
+            return false;
+        }
+
         String query = "INSERT INTO " + tableName;
         List<String> params = new ArrayList<>();
         List<String> names = new ArrayList<>();
@@ -66,8 +71,6 @@ public class Executor {
 
         query += " " + namesString + " VALUES " +  System.lineSeparator() + paramsString + ";";
 
-//        System.out.println("query : " + query);
-
         try {
             return update(query) > 0;
         } catch (SQLException e) {
@@ -89,44 +92,51 @@ public class Executor {
         return ReflectionHelper.getFieldsByAnnotation(object.getClass(), Column.class);
     }
 
+    private String getTableNameFromAnnotation(Class clazz) {
+        Table annotation = (Table) clazz.getAnnotation(Table.class);
+        if(annotation != null){
+            return annotation.name();
+        }
+        return null;
+    }
+
     public <T extends DataSet> T load(long id, Class<T> clazz){
-        try(Statement statement = connection.createStatement()){
-            String query = "SELECT * FROM " + Config.TABLE_NAME + " WHERE id=" + id + ";";
-            ResultSet resultSet = null;
-            try {
-                statement.execute(query);
-                resultSet = statement.getResultSet();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        T result = null;
+        String tableName = getTableNameFromAnnotation(clazz);
+        if(tableName == null){
+            return null;
+        }
 
-            if(resultSet == null){
-                return null;
-            }
+        String query = "SELECT * FROM " + tableName + " WHERE id=" + id + ";";
+        try {
+            result = execQuery(query, resultSet -> {
+//                resultSet.next();
 
-            try {
-                ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-                int columnCount = resultSetMetaData.getColumnCount();
-                Object[] values = null;
+                try {
+                    ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+                    int columnCount = resultSetMetaData.getColumnCount();
+                    Object[] constructorArguments = null;
 
-                if (resultSet.next()) {
-                    values = new Object[columnCount];
-                    for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-                        values[i - 1] = resultSet.getObject(i);
+                    if (resultSet.next()) {
+                        constructorArguments = new Object[columnCount];
+                        for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+                            constructorArguments[i - 1] = resultSet.getObject(i);
+                        }
                     }
-                }
 
-                // create a nre instance using values from the database
-                if(values != null){
-                    return ReflectionHelper.instantiate(clazz, values);
+                    // create a nre instance using values from the database
+                    if(constructorArguments != null){
+                        return ReflectionHelper.instantiate(clazz, constructorArguments);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+                return null;
+            });
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return result;
     }
 
     private int update(String query) throws SQLException {
@@ -134,5 +144,19 @@ public class Executor {
             statement.execute(query);
             return  statement.getUpdateCount();
         }
+    }
+
+
+    private <T> T execQuery(String query, TResultHandler<T> handler) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute(query);
+
+        ResultSet resultSet = statement.getResultSet();
+        T result = handler.handle(resultSet);
+
+        resultSet.close();
+        statement.close();
+
+        return result;
     }
 }
