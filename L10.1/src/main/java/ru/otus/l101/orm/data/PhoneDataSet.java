@@ -2,36 +2,26 @@ package ru.otus.l101.orm.data;
 
 import ru.otus.l101.orm.ORMConfig;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = ORMConfig.Tables.PHONES)
-public class PhoneDataSet{
-
-    @Id
-    @Column(name = "id")
-    private long id;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+public class PhoneDataSet extends DataSet{
 
     @Column(name = "number")
     private String number;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserDataSet user;
 
     public PhoneDataSet() {
 
     }
 
-    public PhoneDataSet(String number) {
+    public PhoneDataSet(String number, UserDataSet user) {
         this.number = number;
+        this.user = user;
     }
 
     public String getNumber() {
@@ -42,6 +32,16 @@ public class PhoneDataSet{
     public String toString() {
         return "PhoneDataSet{" +
                 "number='" + number + '\'' +
+                "user='" + (user == null ? "null" : user.getName()) + '\'' +
                 '}';
+    }
+
+
+    public UserDataSet getUser() {
+        return user;
+    }
+
+    public void setUser(UserDataSet user) {
+        this.user = user;
     }
 }

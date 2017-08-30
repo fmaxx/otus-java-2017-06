@@ -1,11 +1,14 @@
 package ru.otus.l101;
+
+import ru.otus.l101.orm.data.AddressDataSet;
 import ru.otus.l101.orm.data.PhoneDataSet;
 import ru.otus.l101.orm.data.UserDataSet;
 import ru.otus.l101.orm.database.DBService;
-import ru.otus.l101.orm.database.DBServiceImpl;
+import ru.otus.l101.orm.database.DBHibernateServiceImpl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by maximfirsov on 06/07/2017.
@@ -19,39 +22,35 @@ public class Main {
 
     static private void example(){
 
-        DBService service = new DBServiceImpl();
+        DBService service = new DBHibernateServiceImpl();
 
         String status = service.getLocalStatus();
         System.out.println("Status: " + status);
 
-        service.save(new UserDataSet("Max", 36, new ArrayList<PhoneDataSet>(){{
-            new PhoneDataSet("0123456789");
-            new PhoneDataSet("9876543210");
-        }}));
+//        user_1
+        UserDataSet user_1 = new UserDataSet("Max", 36, new AddressDataSet("Lenina", "Snezhinsk"));
+        user_1.setPhones( new ArrayList<>(Arrays.asList(
+                new PhoneDataSet("0123456789", user_1),
+                new PhoneDataSet("9876543210", user_1)
+        )));
+        service.save(user_1);
 
-       /* service.save(new UserDataSet("Dan", 24, new ArrayList<PhoneDataSet>(){{
-            new PhoneDataSet("123123132");
-            new PhoneDataSet("456456465");
-        }}));*/
+//        user_2
+        UserDataSet user_2 = new UserDataSet("Dan", 24, new AddressDataSet("Lenina", "Snezhinsk"));
+        user_2.setPhones( new ArrayList<>(Arrays.asList(
+                new PhoneDataSet("33333333333", user_2),
+                new PhoneDataSet("33333333333", user_2)
+        )));
+        service.save(user_2);
 
+        // Read
+        UserDataSet restored_1 = service.read(1);
+        UserDataSet restored_2 = service.read(2);
 
-//        service.save(new UserDataSet("sully", new PhoneDataSet("67890")));
+        System.out.println("~~~ restored_1 : " + restored_1);
+        System.out.println("~~~ restored_2 : " + restored_2);
 
-       /* Connection connection = ConnectionHelper.open();
-        Executor executor = new Executor(connection);
-
-        // SAVE example
-        UserDataSet forSaveUDS = new UserDataSet("Vasya", 25);
-        boolean result = executor.save(forSaveUDS);
-        System.out.println("~ saved with result : " + result);
-
-        // LOAD example
-        UserDataSet forLoadUDS = executor.load(1, UserDataSet.class);
-        System.out.println("~ loaded : " + forLoadUDS);
-
-        // LOAD non-exist
-        forLoadUDS = executor.load(-1, UserDataSet.class);
-        System.out.println("~ loaded : " + forLoadUDS);*/
+        service.shutdown();
     }
 
 

@@ -4,24 +4,12 @@ import ru.otus.l101.orm.ORMConfig;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = ORMConfig.Tables.ADDRESSES)
-public class AddressDataSet{
+public class AddressDataSet extends DataSet{
 
-    @Id
-    @Column(name = "id")
-    private long id;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     @Column(name = "street")
     private String street;
@@ -30,12 +18,6 @@ public class AddressDataSet{
     private String city;
 
     public AddressDataSet() {
-    }
-
-    public AddressDataSet(int id, String street, String city) {
-        this.id = id;
-        this.street = street;
-        this.city = city;
     }
 
     public AddressDataSet(String street, String city) {

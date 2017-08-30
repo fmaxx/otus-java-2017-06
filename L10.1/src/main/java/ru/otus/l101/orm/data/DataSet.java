@@ -1,17 +1,11 @@
 package ru.otus.l101.orm.data;
+import javax.persistence.*;
 
-import ru.otus.l101.orm.ORMConfig;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = ORMConfig.Tables.USERS)
+@MappedSuperclass
 public abstract class DataSet {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
 

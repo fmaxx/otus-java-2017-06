@@ -3,17 +3,12 @@ package ru.otus.l101.orm.data;
 import ru.otus.l101.orm.ORMConfig;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = ORMConfig.Tables.USERS)
-public class UserDataSet {
-
-    @Id
-    @Column(name = "id")
-    private long id;
-
-
+public class UserDataSet extends DataSet {
 
     @Column(name = "name")
     private String name;
@@ -21,28 +16,20 @@ public class UserDataSet {
     @Column(name = "age")
     int age;
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    private AddressDataSet address;
+    @OneToOne(cascade = CascadeType.ALL)
+    private AddressDataSet address;
 
-   /* @OneToMany(cascade = CascadeType.ALL)
-    private List<PhoneDataSet> phones;*/
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<PhoneDataSet> phones;
 
     public UserDataSet() {
+
     }
 
-    public UserDataSet(String name, int age, List<PhoneDataSet> phones) {
-//        this.phones = phones;
-        this.setId(-1);
+    public UserDataSet(String name, int age, AddressDataSet address) {
         this.name = name;
         this.age = age;
-    }
-
-    // for load operation
-    public UserDataSet(Long id, String name, Integer age, List<PhoneDataSet> phones) {
-//        this.phones = phones;
-        this.setId(id);
-        this.name = name;
-        this.age = age;
+        this.address = address;
     }
 
     public void setName(String name) {
@@ -61,29 +48,29 @@ public class UserDataSet {
         return age;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     @Override
     public String toString() {
-        return "UserDataSet (id: " + getId() + ", name: " + getName() + ", age: " + getAge() + ")";
+        return "UserDataSet (id: " + getId() + ", name: " + getName() + ", age: " + getAge() +
+                " address: " + address+ ", " +
+                " phones: " + phones+ ")";
     }
 
-   /* public AddressDataSet getAddress() {
+    public AddressDataSet getAddress() {
         return null;
 //        return address;
     }
 
     public void setAddress(AddressDataSet address) {
         this.address = address;
-    }*/
+    }
 
-//    public List<PhoneDataSet> getPhones() {
-//        return phones;
-//    }
+
+    public List<PhoneDataSet> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<PhoneDataSet> phones) {
+        this.phones = phones;
+    }
 }

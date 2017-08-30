@@ -14,8 +14,8 @@ public class ORMConfig {
         static {
             hibernateConfiguration = new Configuration();
 
-//            hibernateConfiguration.addAnnotatedClass(AddressDataSet.class);
-//            hibernateConfiguration.addAnnotatedClass(PhoneDataSet.class);
+            hibernateConfiguration.addAnnotatedClass(PhoneDataSet.class);
+            hibernateConfiguration.addAnnotatedClass(AddressDataSet.class);
             hibernateConfiguration.addAnnotatedClass(UserDataSet.class);
 
             hibernateConfiguration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
@@ -26,7 +26,7 @@ public class ORMConfig {
             hibernateConfiguration.setProperty("hibernate.show_sql", "true");
             hibernateConfiguration.setProperty("hibernate.hbm2ddl.auto", "create");
             hibernateConfiguration.setProperty("hibernate.connection.useSSL", "false");
-//            hibernateConfiguration.setProperty("hibernate.connection.autocommit", "true");
+            hibernateConfiguration.setProperty("hibernate.connection.autocommit", "true");
             hibernateConfiguration.setProperty("hibernate.enable_lazy_load_no_trans", "true");
             hibernateConfiguration.setProperty("hibernate.jdbc.time_zone", "UTC");
         }

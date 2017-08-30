@@ -19,9 +19,11 @@ public class UserDataSetDAO {
     }
 
     public void save(UserDataSet userDataSet){
-        Serializable id = session.save(userDataSet);
-//        SessionImpl impl = (SessionImpl) session;
-        System.out.println("save id : " + id + ", "+((SessionImpl) session).isClosed());
+        session.save(userDataSet);
+    }
+
+    public UserDataSet read(long id) {
+        return session.load(UserDataSet.class, id);
     }
 
 }
