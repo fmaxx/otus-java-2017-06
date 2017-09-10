@@ -28,10 +28,14 @@ public class DBServiceDecorator implements DBService {
     public UserDataSet read(long id) {
         CacheElement<Long, UserDataSet> cached = cache.get(id);
         if(cached != null){
-            System.out.println("!!!!EBA!!!!");
             return cached.getValue();
         }
-        return service.read(id);
+
+        UserDataSet userDataSet = service.read(id);
+
+        cache.put(new CacheElement<>(userDataSet.getId(), userDataSet));
+
+        return userDataSet;
     }
 
     @Override
