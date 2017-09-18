@@ -55,8 +55,11 @@ public class CacheImpl<K, V> implements Cache<K, V> {
 
     public CacheElement<K, V> get(K key) {
         SoftReference softReference = elements.get(key);
-        CacheElement<K, V> element = (CacheElement<K, V>) softReference.get();
+        if(softReference == null){
+            return null;
+        }
 
+        CacheElement<K, V> element = (CacheElement<K, V>) softReference.get();
         if (element != null) {
             hit++;
             element.setAccessed();
